@@ -45,7 +45,7 @@ export interface NotionSourceMeta {
 const json = (obj: unknown): string => JSON.stringify(obj, null, 2) + "\n";
 
 const MARKER_FILENAME = ".notion-sync.json";
-const LAYOUT_VERSION = 1;
+const LAYOUT_VERSION = 2;
 
 export function pluginDir(pluginsDir: string, slug: string): string {
   return `${pluginsDir}/${slug}`;
@@ -83,13 +83,15 @@ function text(content: FileContent): string {
 /**
  * Claude still uses its legacy manifest location and requires metadata that is
  * optional in the Agent Plugins standard. Preserve the standard manifest as
- * supplied, filling only those missing Claude fields in the derived copy.
+ * supplied, dropping `$schema` and filling only those missing Claude fields in
+ * the derived copy.
  */
 export function buildClaudePluginManifest(
   plugin: PluginInput,
   rootManifest: FileContent,
 ): string {
-  const parsed = JSON.parse(text(rootManifest)) as Record<string, unknown>;
+  // Claude rejects `$schema` as an unknown key (and warns on every marketplace add).
+  const { $schema: _schema, ...parsed } = JSON.parse(text(rootManifest)) as Record<string, unknown>;
   const nonEmpty = (value: unknown): value is string =>
     typeof value === "string" && value.trim().length > 0;
 
