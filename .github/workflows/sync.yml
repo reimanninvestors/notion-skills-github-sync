@@ -28,7 +28,7 @@ name: Sync Notion skills
 
 on:
   schedule:
-    - cron: "0 * * * *" # hourly
+    - cron: "17 * * * *" # hourly, off the :00 peak (GitHub delays/drops top-of-hour runs)
   workflow_dispatch: {} # manual "Run workflow" button
 
 concurrency:

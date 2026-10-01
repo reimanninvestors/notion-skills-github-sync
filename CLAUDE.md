@@ -180,7 +180,7 @@ the Skills API the sync reads has no notion of either.
 
 The Action is the production runner. `.github/workflows/sync.yml`:
 
-- **Triggers:** `schedule` (hourly `0 * * * *`) and `workflow_dispatch` (the
+- **Triggers:** `schedule` (hourly `17 * * * *` — deliberately off `:00`, where GitHub delays or drops scheduled runs; at `0 * * * *` we saw 3–7 h gaps) and `workflow_dispatch` (the
   manual **Run workflow** button / `gh workflow run`).
 - **Steps:** checkout → setup Bun → `bun install` → `bun run src/cli.ts sync`.
   No CLI install step: the sync is plain HTTPS on both ends now (Notion Skills
